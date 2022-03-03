@@ -3,9 +3,10 @@ package format
 import (
 	"context"
 	"errors"
-	"runtime"
-
 	cid "github.com/ipfs/go-cid"
+	"metrics"
+	"runtime"
+	"time"
 )
 
 // parallelBatchCommits is the number of batch commits that can be in-flight before blocking.
@@ -78,6 +79,8 @@ func (t *Batch) processResults() {
 }
 
 func (t *Batch) asyncCommit() {
+	//metrics.PrintStack(8)
+
 	numBlocks := len(t.nodes)
 	if numBlocks == 0 {
 		return
@@ -118,6 +121,10 @@ func (t *Batch) Add(ctx context.Context, nd Node) error {
 // AddMany many calls Add for every given Node, thus batching and
 // commiting them as needed.
 func (t *Batch) AddMany(ctx context.Context, nodes []Node) error {
+	start := time.Now()
+	defer func() {
+		metrics.PersistDura += time.Now().Sub(start)
+	}()
 	if t.err != nil {
 		return t.err
 	}
@@ -141,6 +148,10 @@ func (t *Batch) AddMany(ctx context.Context, nodes []Node) error {
 
 // Commit commits batched nodes.
 func (t *Batch) Commit() error {
+	start := time.Now()
+	defer func() {
+		metrics.PersistDura += time.Now().Sub(start)
+	}()
 	if t.err != nil {
 		return t.err
 	}
