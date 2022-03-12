@@ -2,7 +2,6 @@ package format
 
 import (
 	"context"
-
 	cid "github.com/ipfs/go-cid"
 )
 
@@ -42,6 +41,7 @@ func NewNavigableIPLDNode(node Node, nodeGetter NodeGetter) *NavigableIPLDNode {
 // to preload the following child nodes to `childIndex` leaving them ready
 // for subsequent `FetchChild` calls.
 func (nn *NavigableIPLDNode) FetchChild(ctx context.Context, childIndex uint) (NavigableNode, error) {
+
 	// This function doesn't check that `childIndex` is valid, that's
 	// the `Walker` responsibility.
 

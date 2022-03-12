@@ -2,7 +2,6 @@ package format
 
 import (
 	"context"
-
 	cid "github.com/ipfs/go-cid"
 )
 
@@ -39,6 +38,7 @@ func GetDAG(ctx context.Context, ds NodeGetter, root Node) []*NodePromise {
 // to the key with the same index as the passed in keys
 func GetNodes(ctx context.Context, ds NodeGetter, keys []cid.Cid) []*NodePromise {
 
+	//metrics.PrintStack(20)
 	// Early out if no work to do
 	if len(keys) == 0 {
 		return nil
