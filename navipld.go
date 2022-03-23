@@ -44,7 +44,6 @@ func (nn *NavigableIPLDNode) FetchChild(ctx context.Context, childIndex uint) (N
 
 	// This function doesn't check that `childIndex` is valid, that's
 	// the `Walker` responsibility.
-
 	// If we drop to <= preloadSize/2 preloading nodes, preload the next 10.
 	for i := childIndex; i < childIndex+preloadSize/2 && i < uint(len(nn.childPromises)); i++ {
 		// TODO: Check if canceled.
@@ -53,7 +52,6 @@ func (nn *NavigableIPLDNode) FetchChild(ctx context.Context, childIndex uint) (N
 			break
 		}
 	}
-
 	child, err := nn.getPromiseValue(ctx, childIndex)
 
 	switch err {

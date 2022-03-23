@@ -309,6 +309,7 @@ func (w *Walker) down(visitor Visitor) error {
 // Fetch the child from the `ActiveNode` through the `FetchChild`
 // method of the `NavigableNode` interface.
 func (w *Walker) fetchChild() (NavigableNode, error) {
+
 	if w.currentDepth == -1 {
 		// First time `down()` is called, `currentDepth` is -1,
 		// return the root node. Don't check available child nodes
@@ -350,6 +351,7 @@ func (w *Walker) extendPath(child NavigableNode) {
 // the `Pause` signal and do other minor checks (taking this logic away
 // from `down`).
 func (w *Walker) visitActiveNode(visitor Visitor) error {
+
 	if visitor == nil {
 		return nil
 		// No need to check `pauseRequested` as `Pause` should
