@@ -2,7 +2,10 @@ package format
 
 import (
 	"context"
+	"fmt"
 	cid "github.com/ipfs/go-cid"
+	"metrics"
+	"time"
 )
 
 // NavigableIPLDNode implements the `NavigableNode` interface wrapping
@@ -41,7 +44,9 @@ func NewNavigableIPLDNode(node Node, nodeGetter NodeGetter) *NavigableIPLDNode {
 // to preload the following child nodes to `childIndex` leaving them ready
 // for subsequent `FetchChild` calls.
 func (nn *NavigableIPLDNode) FetchChild(ctx context.Context, childIndex uint) (NavigableNode, error) {
-
+	if metrics.GetBreakDownLog {
+		fmt.Printf("%s FetchChild of %s with childIndex %d\n", time.Now().String(), nn.node.Cid(), childIndex)
+	}
 	// This function doesn't check that `childIndex` is valid, that's
 	// the `Walker` responsibility.
 	// If we drop to <= preloadSize/2 preloading nodes, preload the next 10.
@@ -53,6 +58,9 @@ func (nn *NavigableIPLDNode) FetchChild(ctx context.Context, childIndex uint) (N
 		}
 	}
 	child, err := nn.getPromiseValue(ctx, childIndex)
+	if metrics.GetBreakDownLog {
+		fmt.Printf("%s getPromisedValue of %d %s\n", time.Now().String(), childIndex, child.Cid())
+	}
 
 	switch err {
 	case nil:
@@ -89,7 +97,9 @@ func (nn *NavigableIPLDNode) preload(ctx context.Context, beg uint) {
 	if end >= uint(len(nn.childCIDs)) {
 		end = uint(len(nn.childCIDs))
 	}
-
+	if metrics.GetBreakDownLog {
+		fmt.Printf("%s preload [%d:%d], %v\n", time.Now().String(), beg, end, nn.childCIDs[beg:end])
+	}
 	copy(nn.childPromises[beg:], GetNodes(ctx, nn.nodeGetter, nn.childCIDs[beg:end]))
 }
 
