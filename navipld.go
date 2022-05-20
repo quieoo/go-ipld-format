@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	cid "github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/peer"
 	"metrics"
 	"time"
 )
@@ -38,6 +39,17 @@ func NewNavigableIPLDNode(node Node, nodeGetter NodeGetter) *NavigableIPLDNode {
 	nn.childPromises = make([]*NodePromise, len(nn.childCIDs))
 
 	return nn
+}
+func (nn *NavigableIPLDNode) GetChilds() []cid.Cid {
+	return nn.childCIDs
+}
+
+func (nn *NavigableIPLDNode) GetPeers() []peer.ID {
+	return nn.nodeGetter.(PeerGetter).GetPeers()
+}
+
+func (nn *NavigableIPLDNode) GetGetter() NodeGetter {
+	return nn.nodeGetter
 }
 
 // FetchChild implements the `NavigableNode` interface using node promises

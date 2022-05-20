@@ -3,6 +3,9 @@ package format
 import (
 	"context"
 	"fmt"
+	blocks "github.com/ipfs/go-block-format"
+	"github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p-core/routing"
 
 	cid "github.com/ipfs/go-cid"
 )
@@ -64,4 +67,12 @@ type DAGService interface {
 	//
 	// It returns success even if the nodes were not present in the DAG.
 	RemoveMany(context.Context, []cid.Cid) error
+}
+type PeerGetter interface {
+	NodeGetter
+
+	GetPeers() []peer.ID
+	GetBlocksFrom(context.Context, []cid.Cid, peer.ID) <-chan blocks.Block
+	GetRouting() routing.ContentRouting
+	PeerConnect(id peer.ID)
 }

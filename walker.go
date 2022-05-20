@@ -3,6 +3,8 @@ package format
 import (
 	"context"
 	"errors"
+	"github.com/ipfs/go-cid"
+	"github.com/libp2p/go-libp2p-core/peer"
 )
 
 // Walker provides methods to move through a DAG of nodes that implement
@@ -115,6 +117,12 @@ type NavigableNode interface {
 
 	// ChildTotal returns the number of children of the `ActiveNode`.
 	ChildTotal() uint
+
+	// GetIPLDNode returns actual IPLD Node
+	GetIPLDNode() Node
+	GetChilds() []cid.Cid
+	GetPeers() []peer.ID
+	GetGetter() NodeGetter
 
 	// TODO: Evaluate providing the `Cleanup` and `Reset` methods.
 
